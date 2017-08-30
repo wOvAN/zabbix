@@ -17,7 +17,7 @@ const (
 	Unmonitored StatusType = 1
 )
 
-// https://www.zabbix.com/documentation/2.2/manual/appendix/api/host/definitions
+// https://www.zabbix.com/documentation/3.2/manual/api/reference/host/object
 type Host struct {
 	HostId    string        `json:"hostid,omitempty"`
 	Host      string        `json:"host"`
@@ -29,11 +29,15 @@ type Host struct {
 	// Fields below used only when creating hosts
 	GroupIds   HostGroupIds   `json:"groups,omitempty"`
 	Interfaces HostInterfaces `json:"interfaces,omitempty"`
+	Templates  TemplateIds    `json:"templates,omitempty"`
+	//TODO:
+	//Macros   Macroses      `json:"macros,omitempty"`
+	//Inventory Inventories `json:"inventory,omitempty"`
 }
 
 type Hosts []Host
 
-// Wrapper for host.get: https://www.zabbix.com/documentation/2.2/manual/appendix/api/host/get
+// Wrapper for host.get: https://www.zabbix.com/documentation/3.2/manual/api/reference/host/get
 func (api *API) HostsGet(params Params) (res Hosts, err error) {
 	if _, present := params["output"]; !present {
 		params["output"] = "extend"

@@ -19,7 +19,7 @@ type HostInterface struct {
 	Port  string        `json:"port"`
 	Type  InterfaceType `json:"type"`
 	UseIP int           `json:"useip"`
-	Bulk  int           `json:"bulk"`
+	Bulk  int           `json:"bulk,omitempty"`
 }
 
 type HostInterfaces []HostInterface
