@@ -90,3 +90,13 @@ func ExampleAPI_Call() {
 	res, _ := api.Call("item.get", Params{"itemids": "23970", "output": "extend"})
 	log.Print(res)
 }
+
+
+func TestLogout(t *testing.T) {
+	api := getAPI(t)
+	err := api.Logout()
+	if err != nil {
+		t.Fatal(err)
+	}
+	_api = nil
+}

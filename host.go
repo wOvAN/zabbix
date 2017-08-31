@@ -27,9 +27,11 @@ type Host struct {
 	Status    StatusType    `json:"status"`
 
 	// Fields below used only when creating hosts
-	GroupIds   HostGroupIds   `json:"groups,omitempty"`
-	Interfaces HostInterfaces `json:"interfaces,omitempty"`
-	Templates  TemplateIds    `json:"templates,omitempty"`
+	GroupIds    HostGroupIds   `json:"groups,omitempty"`
+	Interfaces  HostInterfaces `json:"interfaces,omitempty"`
+	Templates   TemplateIds    `json:"templates,omitempty"`
+	ProxyHostID string         `json:"proxy_hostid,omitempty"`
+	//proxy_hostid 	string 	ID of the proxy that is used to monitor the host.
 	//TODO:
 	//Macros   Macroses      `json:"macros,omitempty"`
 	//Inventory Inventories `json:"inventory,omitempty"`

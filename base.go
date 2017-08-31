@@ -3,6 +3,7 @@ package zabbix
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -141,6 +142,23 @@ func (api *API) Login(user, password string) (auth string, err error) {
 	auth = response.Result.(string)
 	api.Auth = auth
 	return
+}
+
+// Calls "user.logout" API method.
+// This method modifies API structure and should not be called concurrently with other methods.
+func (api *API) Logout() (err error) {
+	if api.Auth == "" {
+		return nil
+	}
+	response, err := api.CallWithError("user.logout", Params{})
+	if err != nil {
+		return err
+	}
+	if !response.Result.(bool) {
+		return errors.New("Logout failed")
+	}
+	api.Auth = ""
+	return nil
 }
 
 // Calls "APIInfo.version" API method.
