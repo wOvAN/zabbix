@@ -3,7 +3,7 @@
 package zabbix
 
 import (
-	"github.com/AlekSi/reflector"
+	"github.com/wOvAN/reflector"
 )
 
 type ProxyType int

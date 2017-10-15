@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/AlekSi/reflector"
+	"github.com/wOvAN/reflector"
 )
 
 type Timestamp time.Time

@@ -3,7 +3,7 @@
 package zabbix
 
 import (
-	"github.com/AlekSi/reflector"
+	"github.com/wOvAN/reflector"
 )
 
 // https://www.zabbix.com/documentation/3.2/manual/api/reference/template/object
