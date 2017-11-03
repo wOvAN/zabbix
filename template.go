@@ -6,12 +6,41 @@ import (
 	"github.com/wOvAN/reflector"
 )
 
-// https://www.zabbix.com/documentation/3.2/manual/api/reference/template/object
+const (
+	// Template Selectors
+	SelectGroups          = "selectGroups"
+	SelectHosts           = "selectHosts"
+	SelectTemplates       = "selectTemplates"
+	SelectParentTemplates = "selectParentTemplates"
+	SelectHttpTests       = "selectHttpTests"
+	SelectItems           = "selectItems"
+	SelectDiscoveries     = "selectDiscoveries"
+	SelectTriggers        = "selectTriggers"
+	SelectGraphs          = "selectGraphs"
+	SelectApplications    = "selectApplications"
+	SelectMacros          = "selectMacros"
+	SelectScreens         = "selectScreens"
+)
+
+// https://www.zabbix.com/documentation/4.0/manual/api/reference/template/object
 type Template struct {
 	TemplateId  string `json:"templateid,omitempty"`
 	Host        string `json:"host"`
 	Description string `json:"description,omitempty"`
 	Name        string `json:"name,omitempty"`
+	// Extended fields
+	Groups          HostGroups `json:"groups,omitempty"`
+	Templates       Templates  `json:"templates,omitempty"`
+	Items           Items      `json:"items,omitempty"`
+	Hosts           Hosts      `json:"hosts,omitempty"`
+	ParentTemplates Templates  `json:"parentTemplates,omitempty"`
+	HttpTests       string     `json:"httpTests,omitempty"`
+	Discoveries     string     `json:"discoveries,omitempty"`
+	Triggers        Triggers   `json:"triggers,omitempty"`
+	Graphs          string     `json:"graphs,omitempty"`
+	Applications    string     `json:"applications,omitempty"`
+	Macros          string     `json:"macros,omitempty"`
+	Screens         string     `json:"screens,omitempty"`
 }
 type Templates []Template
 
@@ -32,6 +61,24 @@ func (api *API) TemplatesGet(params Params) (res Templates, err error) {
 	}
 
 	reflector.MapsToStructs2(response.Result.([]interface{}), &res, reflector.Strconv, "json")
+	return
+}
+
+// Wrapper for template.update: https://www.zabbix.com/documentation/4.0/manual/api/reference/template/update
+func (api *API) TemplatesUpdate(params Params) (res TemplateIds, err error) {
+	if _, present := params["output"]; !present {
+		params["output"] = "extend"
+	}
+	response, err := api.CallWithError("template.update", params)
+	if err != nil {
+		return
+	}
+
+	result := response.Result.(map[string]interface{})
+	templateids := result["templateids"].([]interface{})
+	for _, id := range templateids {
+		res = append(res, TemplateId{TemplateId: id.(string)})
+	}
 	return
 }
 

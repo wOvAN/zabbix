@@ -5,10 +5,10 @@ import (
 )
 
 type (
-	InternalType int
+	InternalType interface{}
 )
 
-const (
+var (
 	NotInternal InternalType = 0
 	Internal    InternalType = 1
 )
