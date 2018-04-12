@@ -2,17 +2,19 @@ package zabbix
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/wOvAN/reflector"
 )
 
 type (
-	ItemType  int
-	ValueType int
-	DataType  int
-	DeltaType int
+	ItemType  interface{}
+	ValueType interface{}
+	DataType  interface{}
+	DeltaType interface{}
 )
 
-const (
+var (
 	ZabbixAgent       ItemType = 0
 	SNMPv1Agent       ItemType = 1
 	ZabbixTrapper     ItemType = 2
@@ -30,6 +32,8 @@ const (
 	TELNETAgent       ItemType = 14
 	Calculated        ItemType = 15
 	JMXAgent          ItemType = 16
+	SNMPTrap          ItemType = 17
+	DependentItem     ItemType = 18
 
 	Float     ValueType = 0
 	Character ValueType = 1
@@ -45,27 +49,81 @@ const (
 	AsIs  DeltaType = 0
 	Speed DeltaType = 1
 	Delta DeltaType = 2
+
+	ItemEnabled  = 0
+	ItemDisabled = 1
 )
 
-// https://www.zabbix.com/documentation/2.2/manual/appendix/api/item/definitions
+// https://www.zabbix.com/documentation/4.0/manual/api/reference/item/object
 type Item struct {
-	ItemId      string    `json:"itemid,omitempty"`
-	Delay       int       `json:"delay"`
-	HostId      string    `json:"hostid"`
-	InterfaceId string    `json:"interfaceid,omitempty"`
-	Key         string    `json:"key_"`
-	Name        string    `json:"name"`
-	Type        ItemType  `json:"type"`
-	ValueType   ValueType `json:"value_type"`
-	DataType    DataType  `json:"data_type"`
-	Delta       DeltaType `json:"delta"`
-	Description string    `json:"description"`
-	Error       string    `json:"error"`
-	History     int       `json:"history,omitempty"`
-	Trends      int       `json:"trends,omitempty"`
+	ItemId      string      `json:"itemid,omitempty"`
+	Delay       string      `json:"delay"`
+	HostId      string      `json:"hostid"`
+	InterfaceId string      `json:"interfaceid,omitempty"`
+	Key         string      `json:"key_"`
+	Name        string      `json:"name"`
+	Type        ItemType    `json:"type"`
+	ValueType   ValueType   `json:"value_type"`
+	DataType    DataType    `json:"data_type"`
+	Delta       DeltaType   `json:"delta"`
+	Description string      `json:"description"`
+	Error       string      `json:"error"`
+	History     string      `json:"history,omitempty"`
+	Trends      string      `json:"trends,omitempty"`
+	Status      interface{} `json:"status,omitempty"`
 
 	// Fields below used only when creating applications
 	ApplicationIds []string `json:"applications,omitempty"`
+}
+
+func ItemTypeToText(aItemType ItemType) string {
+
+	v, e := strconv.Atoi(string(aItemType.(string)))
+	if e != nil {
+		return e.Error()
+	}
+	switch v {
+	case ZabbixAgent:
+		return "Zabbix agent"
+	case SNMPv1Agent:
+		return "SNMPv1 agent"
+	case ZabbixTrapper:
+		return "Zabbix trapper"
+	case SimpleCheck:
+		return "simple check"
+	case SNMPv2Agent:
+		return "SNMPv2 agent"
+	case ZabbixInternal:
+		return "Zabbix internal"
+	case SNMPv3Agent:
+		return "SNMPv3 agent"
+	case ZabbixAgentActive:
+		return "Zabbix agent (active)"
+	case ZabbixAggregate:
+		return "Zabbix aggregate"
+	case WebItem:
+		return "Web item"
+	case ExternalCheck:
+		return "External check"
+	case DatabaseMonitor:
+		return "Database monitor"
+	case IPMIAgent:
+		return "IPMI agent"
+	case SSHAgent:
+		return "SSH agent"
+	case TELNETAgent:
+		return "TELNET agent"
+	case Calculated:
+		return "Calculated"
+	case JMXAgent:
+		return "JMX agent"
+	case SNMPTrap:
+		return "SNMP trap"
+	case DependentItem:
+		return "Dependent item"
+	default:
+		return "Unknown (" + fmt.Sprintf("%s", aItemType) + ")"
+	}
 }
 
 type Items []Item

@@ -29,7 +29,7 @@ type ProxyId struct {
 type ProxyIds []ProxyId
 
 // Wrapper for proxy.get: https://www.zabbix.com/documentation/3.2/manual/api/reference/proxy/get
-func (api *API) ProxysGet(params Params) (res Proxys, err error) {
+func (api *API) ProxyGet(params Params) (res Proxys, err error) {
 	if _, present := params["output"]; !present {
 		params["output"] = "extend"
 	}
@@ -44,7 +44,7 @@ func (api *API) ProxysGet(params Params) (res Proxys, err error) {
 
 // Gets host proxy by Id only if there is exactly 1 matching host proxy.
 func (api *API) ProxyGetById(id string) (res *Proxy, err error) {
-	proxys, err := api.ProxysGet(Params{"proxyids": id})
+	proxys, err := api.ProxyGet(Params{"proxyids": id})
 	if err != nil {
 		return
 	}
@@ -59,7 +59,7 @@ func (api *API) ProxyGetById(id string) (res *Proxy, err error) {
 }
 
 // Wrapper for proxy.create: https://www.zabbix.com/documentation/2.2/manual/appendix/api/proxy/create
-func (api *API) ProxysCreate(proxys Proxys) (err error) {
+func (api *API) ProxyCreate(proxys Proxys) (err error) {
 	response, err := api.CallWithError("proxy.create", proxys)
 	if err != nil {
 		return
@@ -75,13 +75,13 @@ func (api *API) ProxysCreate(proxys Proxys) (err error) {
 
 // Wrapper for proxy.delete: https://www.zabbix.com/documentation/2.2/manual/appendix/api/proxy/delete
 // Cleans ProxyId in all proxys elements if call succeed.
-func (api *API) ProxysDelete(proxys Proxys) (err error) {
+func (api *API) ProxyDelete(proxys Proxys) (err error) {
 	ids := make([]string, len(proxys))
 	for i, proxy := range proxys {
 		ids[i] = proxy.ProxyId
 	}
 
-	err = api.ProxysDeleteByIds(ids)
+	err = api.ProxyDeleteByIds(ids)
 	if err == nil {
 		for i := range proxys {
 			proxys[i].ProxyId = ""
@@ -91,7 +91,7 @@ func (api *API) ProxysDelete(proxys Proxys) (err error) {
 }
 
 // Wrapper for proxy.delete: https://www.zabbix.com/documentation/2.2/manual/appendix/api/proxy/delete
-func (api *API) ProxysDeleteByIds(ids []string) (err error) {
+func (api *API) ProxyDeleteByIds(ids []string) (err error) {
 	response, err := api.CallWithError("proxy.delete", ids)
 	if err != nil {
 		return
