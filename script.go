@@ -3,18 +3,16 @@
 package zabbix
 
 import (
-	//	"fmt"
-
 	"github.com/wOvAN/reflector"
 )
 
 type (
-	ScriptType     int
-	ExecuteOnType  int
-	HostAccessType int
+	ScriptType     interface{}
+	ExecuteOnType  interface{}
+	HostAccessType interface{}
 )
 
-const (
+var (
 	// ScriptType
 	ScriptTypeScript ScriptType = 0
 	ScriptTypeIPMI   ScriptType = 1
